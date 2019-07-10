@@ -5,7 +5,7 @@ namespace Fatindeed\LaravelDbDumpMigration;
 use Illuminate\Support\Composer;
 use Illuminate\Database\Console\Migrations\BaseCommand;
 
-class DbDumpCommand extends BaseCommand
+class MigrateMakeCommand extends BaseCommand
 {
     /**
      * The console command signature.
