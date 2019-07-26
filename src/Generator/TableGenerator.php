@@ -3,20 +3,23 @@
 namespace Fatindeed\LaravelDbDumpMigration\Generator;
 
 /**
+ * Table generator class
+ *
  * @see https://laravel.com/docs/5.8/migrations
  */
 class TableGenerator
 {
     /**
-     * @var  \Fatindeed\LaravelDbDumpMigration\Generator\DataProvider
+     * The DataProvider instance.
+     *
+     * @var \Fatindeed\LaravelDbDumpMigration\Generator\DataProvider
      */
     protected $dataProvider;
 
     /**
      * Create a new table generator instance.
      *
-     * @param  \Fatindeed\LaravelDbDumpMigration\Generator\DataProvider  $dataProvider
-     * @return void
+     * @param \Fatindeed\LaravelDbDumpMigration\Generator\DataProvider $dataProvider The DataProvider instance
      */
     public function __construct(DataProvider $dataProvider)
     {
@@ -26,7 +29,8 @@ class TableGenerator
     /**
      * Get Blueprint.
      *
-     * @param  string  $prefix
+     * @param string $prefix Indents and Spacing
+     *
      * @return string
      */
     public function getBlueprint(string $prefix = ''): string
@@ -43,11 +47,11 @@ class TableGenerator
                 continue;
             }
             // $table->unique('email');
-            $lines[] = '$table->index(\''.$index->COLUMN_NAME.'\');';
+            $lines[] = '$table->index(\'' . $index->COLUMN_NAME . '\');';
         }
         $content = '';
         foreach ($lines as $line) {
-            $content .= $prefix.$line.PHP_EOL;
+            $content .= $prefix . $line . PHP_EOL;
         }
         return $content;
     }

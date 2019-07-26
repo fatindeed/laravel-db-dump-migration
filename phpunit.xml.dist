@@ -6,16 +6,12 @@
          cacheResult="false">
   <testsuites>
     <testsuite name="Laravel DB Dump Migration Test Suite">
-      <directory>tests</directory>
+      <directory>./tests</directory>
     </testsuite>
   </testsuites>
   <filter>
     <whitelist>
-      <directory suffix=".php">src/Generator</directory>
+      <directory suffix=".php">./src</directory>
     </whitelist>
   </filter>
-  <php>
-    <env name="QUEUE_NAME" value="testing-queue"/>
-    <server name="HTTP_X_GITLAB_EVENT" value="Push Hook"/>
-  </php>
 </phpunit>

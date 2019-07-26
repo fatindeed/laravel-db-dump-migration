@@ -5,6 +5,11 @@ namespace Fatindeed\LaravelDbDumpMigration;
 use Illuminate\Support\Composer;
 use Illuminate\Database\Console\Migrations\BaseCommand;
 
+/**
+ * Migrate make command
+ *
+ * @see \Illuminate\Database\Console\Migrations\MigrateMakeCommand
+ */
 class MigrateMakeCommand extends BaseCommand
 {
     /**
@@ -42,14 +47,12 @@ class MigrateMakeCommand extends BaseCommand
     /**
      * Create a new migration install command instance.
      *
-     * @param  \App\Console\Commands\DumpMigrationCreator  $creator
-     * @param  \Illuminate\Support\Composer  $composer
-     * @return void
+     * @param \App\Console\Commands\DumpMigrationCreator $creator  The DumpMigrationCreator instance
+     * @param \Illuminate\Support\Composer               $composer The Composer instance
      */
     public function __construct(DumpMigrationCreator $creator, Composer $composer)
     {
         parent::__construct();
-
         $this->creator = $creator;
         $this->composer = $composer;
     }
@@ -62,17 +65,15 @@ class MigrateMakeCommand extends BaseCommand
     public function handle()
     {
         $table = $this->input->getArgument('table');
-
         $file = $this->creator->create(
-            $table, $this->getDatabase(), $this->getMigrationPath()
+            $table,
+            $this->getDatabase(),
+            $this->getMigrationPath()
         );
-
         if (! $this->option('fullpath')) {
             $file = pathinfo($file, PATHINFO_FILENAME);
         }
-
         $this->line("<info>Created Migration:</info> {$file}");
-
         $this->composer->dumpAutoloads();
     }
 
@@ -84,7 +85,6 @@ class MigrateMakeCommand extends BaseCommand
     protected function getDatabase()
     {
         $database = $this->input->getOption('database');
-
         return $database ?: $this->laravel['config']['database.default'];
     }
 
@@ -97,7 +97,7 @@ class MigrateMakeCommand extends BaseCommand
     {
         if (! is_null($targetPath = $this->input->getOption('path'))) {
             return ! $this->usingRealPath()
-                            ? $this->laravel->basePath().'/'.$targetPath
+                            ? $this->laravel->basePath() . '/' . $targetPath
                             : $targetPath;
         }
 

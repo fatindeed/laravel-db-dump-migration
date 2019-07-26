@@ -5,29 +5,35 @@ namespace Fatindeed\LaravelDbDumpMigration;
 use InvalidArgumentException;
 use Illuminate\Support\Str;
 
+/**
+ * Dump migration creator class
+ *
+ * @see \Illuminate\Database\Migrations\MigrationCreator
+ */
 class DumpMigrationCreator
 {
     /**
      * Create a new migration at the given path.
      *
-     * @param  string  $table
-     * @param  string  $database
-     * @param  string  $path
+     * @param string $table    The table name
+     * @param string $database The database name
+     * @param string $path     Migration file path
+     *
      * @return string
      *
      * @throws \Exception
      */
     public function create($table, $database, $path)
     {
-        $name = Str::snake('create_'.$table.'_table');
+        $name = Str::snake('create_' . $table . '_table');
         $this->ensureMigrationDoesntAlreadyExist($name);
 
         $generator = new Generator\TableGenerator(new Generator\DataProvider($database, $table));
 
-        $stub = file_get_contents($this->stubPath().'/create.stub');
+        $stub = file_get_contents($this->stubPath() . '/create.stub');
         $stub = str_replace('DummyClass', $this->getClassName($name), $stub);
         $stub = str_replace('DummyTable', $table, $stub);
-        $stub = str_replace('// blueprint placeholder'.PHP_EOL, $generator->getBlueprint(str_pad('', 12)), $stub);
+        $stub = str_replace('// blueprint placeholder' . PHP_EOL, $generator->getBlueprint(str_pad('', 12)), $stub);
         file_put_contents($path = $this->getPath($name, $path), $stub);
 
         return $path;
@@ -36,7 +42,8 @@ class DumpMigrationCreator
     /**
      * Ensure that a migration with the given name doesn't already exist.
      *
-     * @param  string  $name
+     * @param string $name Migration name
+     *
      * @return void
      *
      * @throws \InvalidArgumentException
@@ -51,9 +58,10 @@ class DumpMigrationCreator
     /**
      * Populate the place-holders in the migration stub.
      *
-     * @param  string  $name
-     * @param  string  $stub
-     * @param  string|null  $table
+     * @param string      $name  The table name
+     * @param string      $stub  Stub file name
+     * @param string|null $table The table name
+     *
      * @return string
      */
     protected function populateStub($name, $stub, $table)
@@ -64,7 +72,8 @@ class DumpMigrationCreator
     /**
      * Get the class name of a migration name.
      *
-     * @param  string  $name
+     * @param string $name Migration name
+     *
      * @return string
      */
     protected function getClassName($name)
@@ -75,13 +84,14 @@ class DumpMigrationCreator
     /**
      * Get the full path to the migration.
      *
-     * @param  string  $name
-     * @param  string  $path
+     * @param string $name Migration name
+     * @param string $path Migration file path
+     *
      * @return string
      */
     protected function getPath($name, $path)
     {
-        return $path.'/'.$this->getDatePrefix().'_'.$name.'.php';
+        return $path . '/' . $this->getDatePrefix() . '_' . $name . '.php';
     }
 
     /**
@@ -101,6 +111,6 @@ class DumpMigrationCreator
      */
     public function stubPath()
     {
-        return __DIR__.'/stubs';
+        return __DIR__ . '/stubs';
     }
 }

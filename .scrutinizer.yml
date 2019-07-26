@@ -1,0 +1,31 @@
+# https://scrutinizer-ci.com/docs/
+build:
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+          - phpcs-run
+    coverage:
+      tests:
+        override:
+          - command: ./vendor/bin/phpunit --coverage-clover clover.xml
+            coverage:
+              file: clover.xml
+              format: clover
+  environment:
+    php:
+      version: 7.3
+  dependencies:
+    override:
+      # - yes | pecl install swoole
+      - composer install --prefer-source --no-interaction
+filter:
+  paths:
+    - src/
+  dependency_paths:
+    - vendor/
+checks:
+  php: true
+coding_style:
+  php: {  }

@@ -5,6 +5,11 @@ namespace Fatindeed\LaravelDbDumpMigration\Generator;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Data provider class
+ *
+ * @see https://laravel.com/docs/5.8/migrations
+ */
 class DataProvider
 {
     /**
@@ -17,10 +22,9 @@ class DataProvider
     /**
      * Create a new data provider instance.
      *
-     * @param  string  $connection
-     * @param  string  $table
-     * @return void
-     * 
+     * @param string $connection The connection name
+     * @param string $table      The table name
+     *
      * @throws \InvalidArgumentException
      */
     public function __construct(string $connection, string $table)
@@ -29,9 +33,12 @@ class DataProvider
         if (DB::connection()->getDriverName() != 'mysql') {
             throw new InvalidArgumentException('Only support MySQL driver.');
         }
-        $schema = DB::selectOne('select * from information_schema.TABLES where TABLE_SCHEMA = ? AND TABLE_NAME = ?', [DB::connection()->getDatabaseName(), $table]);
+        $schema = DB::selectOne(
+            'select * from information_schema.TABLES where TABLE_SCHEMA = ? AND TABLE_NAME = ?',
+            [DB::connection()->getDatabaseName(), $table]
+        );
         if (is_null($schema)) {
-            throw new InvalidArgumentException('Table "'.$table.'" does not exist.');
+            throw new InvalidArgumentException('Table "' . $table . '" does not exist.');
         }
         $this->schema = (array) $schema;
     }
@@ -53,7 +60,10 @@ class DataProvider
      */
     public function getColumns(): array
     {
-        return DB::select('select * from information_schema.COLUMNS where TABLE_SCHEMA = ? AND TABLE_NAME = ?', [$this->schema['TABLE_SCHEMA'], $this->schema['TABLE_NAME']]);
+        return DB::select(
+            'select * from information_schema.COLUMNS where TABLE_SCHEMA = ? AND TABLE_NAME = ?',
+            [$this->schema['TABLE_SCHEMA'], $this->schema['TABLE_NAME']]
+        );
     }
 
     /**
@@ -63,7 +73,10 @@ class DataProvider
      */
     public function getIndexes(): array
     {
-        $keys = DB::select('select * from information_schema.KEY_COLUMN_USAGE where TABLE_SCHEMA = ? AND TABLE_NAME = ?', [$this->schema['TABLE_SCHEMA'], $this->schema['TABLE_NAME']]);
+        $keys = DB::select(
+            'select * from information_schema.KEY_COLUMN_USAGE where TABLE_SCHEMA = ? AND TABLE_NAME = ?',
+            [$this->schema['TABLE_SCHEMA'], $this->schema['TABLE_NAME']]
+        );
         return $keys;
     }
 }
